@@ -12,13 +12,13 @@
         <h1>National Parks finder</h1>
 
         <form id="js-form">
-            <label></label>
-            <input type="text">
+            <label for="selectedStates">What state(s) would you like to search?</label>
+            <input type="text" name="selectedStates" id="js-selected-states" required>
 
-            <label></label>
-            <input type="number">
+            <label for="max-results">Maximum results to return (up to 10):</label>
+            <input type="number" name="max-results" id="js-max-results" value="10">
 
-            <input type="submit">
+            <input type="submit" value="Find me some parks!">
 
         </form>
 
