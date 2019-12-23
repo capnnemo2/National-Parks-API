@@ -5,17 +5,19 @@ const apiKey = "vTdPqlmue8BdVYbrqtmKcOAkzbzOplfhqCgOH6Pz";
 
 function watchForm() {
     $('form').submit(event => {
+        console.log(`ran watchForm`);
         event.preventDefault();
-        const selectedStates = $('#js-selected-states').val();
+        const stateSelected = $('#js-state-selected').val();
         const maxResults = $('#js-max-results').val();
-        getNationalParks(selectedStates, maxResults);
+        getNationalParks(stateSelected, maxResults);
     });
 }
 
-function getNationalParks(selectedStates, maxResults) {
+function getNationalParks(stateSelected, maxResults) {
+    console.log(`ran getNationalParks`);
     const params = {
         api_key: apiKey,
-        stateCode: selectedStates,
+        stateCode: stateSelected,
         limit: maxResults
     };
 
@@ -31,31 +33,47 @@ function getNationalParks(selectedStates, maxResults) {
         }
         throw new Error(response.statusText);
     })
-    .then(respsonseJson => displayResults(responseJson))
+    .then(responseJson => displayResults(responseJson))
     .catch(err => {
         $('#js-err-msg').text(`The man behind the curtain spilled his coffee and something went wrong: ${err.message}`);
     });
 }
 
 function formatQueryParams(params) {
+    console.log(`ran formatQueryParams`);
     const queryItems = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+    console.log(queryItems.join('&'));
     return queryItems.join('&');
 }
 
 function displayResults(responseJson) {
+    console.log(`ran displayResults`);
     console.log(responseJson);
     $('#results-list').empty();
-    for (let i = 0; i < responseJson.length; i++) {
-        $('#results-list').append(`<li>
-        <h3>${responseJson.items[i].park.name}</h3>
-        <p>${responseJson.items[i].park.description}</p>
-        <a href="${responseJson.items[i].park.url}">${responseJson.items[i].park.url}</a>
-        </li>`)
-    };
+
+    responseJson.data.map(element => {
+        $('#results-list').append(
+            `<li><h3>${element.fullName}</h3>
+            <a href="${element.url}" target="_blank" rel="noopener noreferrer">${element.url}</a>
+            <p>${element.description}</p>
+            </li>`
+        )
+    });
+
+    // not sure why this didn't work:
+    // for (let i = 0; i < responseJson.data.length; i++) {
+    //     $('#results-list').append(`<li>
+    //     <h3>${responseJson.data[i].fullName}</h3>
+    //     <p>${responseJsondata[i].description}</p>
+    //     <a href="${responseJson.data[i].url}" target="_blank" rel="noopener noreferrer">${responseJson.data[i].url}</a>
+    //     </li>`)
+    // };
 
     $('#results').removeClass('hidden');
     
 }
+
+// <p>${responseJson.data[i].address[0]}</p>
 
 
 
