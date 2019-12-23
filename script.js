@@ -1,6 +1,7 @@
 'use strict';
 
-const searchURL = "https://developer.nps.gov/api/v1/parks"
+const searchURL = "https://developer.nps.gov/api/v1/parks";
+const apiKey = "vTdPqlmue8BdVYbrqtmKcOAkzbzOplfhqCgOH6Pz";
 
 function watchForm() {
     $('form').submit(event => {
@@ -11,15 +12,14 @@ function watchForm() {
     });
 }
 
-function getNationalParks() {
+function getNationalParks(selectedStates, maxResults) {
     const params = {
-        key: apiKey,
-        q: MediaQueryList,
-        part: 'snippet',
-        maxResults
+        api_key: apiKey,
+        stateCode: selectedStates,
+        limit: maxResults
     };
 
-    const queryString = 
+    const queryString = formatQueryParams(params);
     const url = searchURL + '?' + queryString;
 
     console.log(url);
@@ -29,7 +29,7 @@ function getNationalParks() {
         if(response.ok) {
             return response.json();
         }
-        throw neww Error(response.statusText);
+        throw new Error(response.statusText);
     })
     .then(respsonseJson => displayResults(responseJson))
     .catch(err => {
@@ -37,9 +37,23 @@ function getNationalParks() {
     });
 }
 
+function formatQueryParams(params) {
+    const queryItems = Object.keys(params).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+    return queryItems.join('&');
+}
+
 function displayResults(responseJson) {
     console.log(responseJson);
     $('#results-list').empty();
+    for (let i = 0; i < responseJson.length; i++) {
+        $('#results-list').append(`<li>
+        <h3>${responseJson.items[i].park.name}</h3>
+        <p>${responseJson.items[i].park.description}</p>
+        <a href="${responseJson.items[i].park.url}">${responseJson.items[i].park.url}</a>
+        </li>`)
+    };
+
+    $('#results').removeClass('hidden');
     
 }
 
