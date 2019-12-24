@@ -7,10 +7,21 @@ function watchForm() {
     $('form').submit(event => {
         console.log(`ran watchForm`);
         event.preventDefault();
-        const stateSelected = $('#js-state-selected').val();
+        const stateSelected = getStates();
         const maxResults = $('#js-max-results').val();
         getNationalParks(stateSelected, maxResults);
     });
+}
+
+function getStates() {
+    let statesList = [];
+    let submitStates = "";
+    $.each($("input[name='state']:checked"), function() {
+        statesList.push($(this).val());
+    });
+    console.log('this is the list of states: ' + statesList.join(", "));
+    submitStates = statesList.join(",");
+    return submitStates;
 }
 
 function getNationalParks(stateSelected, maxResults) {
@@ -59,21 +70,9 @@ function displayResults(responseJson) {
             </li>`
         )
     });
-
-    // not sure why this didn't work:
-    // for (let i = 0; i < responseJson.data.length; i++) {
-    //     $('#results-list').append(`<li>
-    //     <h3>${responseJson.data[i].fullName}</h3>
-    //     <p>${responseJsondata[i].description}</p>
-    //     <a href="${responseJson.data[i].url}" target="_blank" rel="noopener noreferrer">${responseJson.data[i].url}</a>
-    //     </li>`)
-    // };
-
     $('#results').removeClass('hidden');
-    
 }
 
-// <p>${responseJson.data[i].address[0]}</p>
 
 
 
