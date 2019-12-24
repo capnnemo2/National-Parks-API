@@ -3,7 +3,7 @@
 }
 
 .container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -14,3 +14,17 @@
 .hidden {
     display: none;
 }
+
+.wrapper {
+    display: flex;
+}
+
+input {
+    margin-right: 10px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+/* this should be re-coded to be mobile friendly first, then media queries for larger screens */
